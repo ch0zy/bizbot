@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BizBot — Smart Business Assistant</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="bizbot.css" />
+</head>
+<body>
+
+  <!-- ============================================================
+       HEADER
+       ============================================================ -->
+  <header>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <!-- Mobile sidebar toggle -->
+      <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+      <a href="#" class="logo">
+        <div class="logo-icon">📋</div>
+        <span class="logo-text">Biz<span>Bot</span></span>
+      </a>
+    </div>
+    <nav>
+      <button class="nav-btn active" onclick="setView('chat')">💬 Assistant</button>
+      <button class="nav-btn" onclick="setView('summary')">📄 My Application</button>
+    </nav>
+  </header>
+
+  <!-- ============================================================
+       MAIN LAYOUT
+       ============================================================ -->
+  <div class="app-layout">
+
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="sidebar" id="sidebar">
+
+      <!-- Search -->
+      <div class="sidebar-section">
+        <div class="sidebar-label">Search Permits</div>
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="permit-search" placeholder="Search permit types..." oninput="filterPermits(this.value)" />
+        </div>
+      </div>
+
+      <!-- Permit Categories List -->
+      <div class="permit-list" id="permit-list">
+        <!-- Populated by JS -->
+      </div>
+
+      <!-- Progress Tracker -->
+      <div class="progress-section" id="progress-section" style="display:none;">
+        <div class="progress-label">
+          <span>Application Progress</span>
+          <span id="progress-pct">0%</span>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" id="progress-fill"></div>
+        </div>
+        <div class="progress-steps" id="progress-steps"></div>
+      </div>
+
+    </aside>
+
+    <!-- ==================== CHAT AREA ==================== -->
+    <main class="chat-area" id="chat-area">
+
+      <!-- Welcome screen (shown before first interaction) -->
+      <div class="welcome-screen" id="welcome-screen">
+        <div class="welcome-icon">🏛️</div>
+        <div class="welcome-title">Your Smart<br/><span>Business Assistant</span></div>
+        <div class="welcome-desc">
+          I'll help you identify the right permit, answer your questions, and guide you through the application — step by step, in plain English.
+        </div>
+        <div class="welcome-cards">
+          <div class="welcome-card" onclick="startFlow('building')">
+            <div class="welcome-card-icon">🏗️</div>
+            <div class="welcome-card-title">Building Permit</div>
+            <div class="welcome-card-desc">Construction, renovations & structures</div>
+          </div>
+          <div class="welcome-card" onclick="startFlow('business')">
+            <div class="welcome-card-icon">🏪</div>
+            <div class="welcome-card-title">Business License</div>
+            <div class="welcome-card-desc">Operating a business legally</div>
+          </div>
+          <div class="welcome-card" onclick="startFlow('event')">
+            <div class="welcome-card-icon">🎉</div>
+            <div class="welcome-card-title">Event Permit</div>
+            <div class="welcome-card-desc">Public gatherings & special events</div>
+          </div>
+          <div class="welcome-card" onclick="sendMessage('I am not sure what permit I need')">
+            <div class="welcome-card-icon">❓</div>
+            <div class="welcome-card-title">Not Sure?</div>
+            <div class="welcome-card-desc">Let me help you find the right one</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat feed (hidden until first interaction) -->
+      <div class="chat-feed" id="chat-feed" style="display:none;">
+        <div class="chat-inner" id="chat-inner"></div>
+      </div>
+
+      <!-- Input area -->
+      <div class="chat-input-area">
+        <div class="chat-input-inner">
+          <div class="chat-input-wrap">
+            <!-- Textarea auto-grows with JS -->
+            <textarea
+              id="chat-input"
+              rows="1"
+              placeholder="Ask a question or type your answer…"
+              onkeydown="handleKey(event)"
+              oninput="autoGrow(this)"
+            ></textarea>
+            <div class="input-actions">
+              <button class="icon-btn" title="Clarify" onclick="sendClarify()" aria-label="Ask a clarifying question">💡</button>
+            </div>
+          </div>
+          <button class="send-btn" onclick="sendFromInput()" aria-label="Send">
+            ➤
+          </button>
+        </div>
+        <div class="input-meta">Press Enter to send · Shift+Enter for new line · 💡 to ask a clarifying question</div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ============================================================
+       JAVASCRIPT
+       ============================================================ -->
+  <script>
+    // ============================================================
+    // DATA — Permit types and their form definitions
+    // ============================================================
+    const PERMIT_DATA = {
+      building: {
+        icon: '🏗️',
+        label: 'Building Permit',
+        category: 'Construction',
+        description: 'Required for new construction, additions, major renovations, or structural work.',
+        steps: [
+          { id: 'owner', title: 'Owner Info', fields: [
+            { id: 'owner_name',    label: 'Property Owner Full Name',  type: 'text',     hint: 'Enter the legal name as it appears on property documents', required: true },
+            { id: 'owner_email',   label: 'Email Address',             type: 'email',    hint: 'We\'ll send permit status updates here', required: true },
+            { id: 'owner_phone',   label: 'Phone Number',              type: 'tel',      hint: 'Singapore number, e.g. +65 9123 4567', required: true },
+          ]},
+          { id: 'property', title: 'Property Details', fields: [
+            { id: 'prop_address',  label: 'Property Address',          type: 'text',     hint: 'Block/Street name, unit number (e.g. 123 Orchard Road, #05-01)', required: true },
+            { id: 'prop_postal',   label: 'Postal Code',               type: 'text',     hint: '6-digit Singapore postal code', required: true },
+            { id: 'prop_parcel',   label: 'Parcel / APN Number',       type: 'text',     hint: 'Found on your property tax bill or county assessor website', required: false },
+            { id: 'prop_zone',     label: 'Zoning Classification',     type: 'select',   options: ['Residential (R1)', 'Residential Multi-Family (R2)', 'Commercial (C1)', 'Mixed Use', 'Industrial', 'Agricultural'], required: true },
+          ]},
+          { id: 'project', title: 'Project Description', fields: [
+            { id: 'proj_type',     label: 'Type of Work',              type: 'select',   options: ['New Construction', 'Addition', 'Renovation / Remodel', 'Structural Repair', 'Accessory Dwelling Unit (ADU)', 'Demolition', 'Other'], required: true },
+            { id: 'proj_sqft',     label: 'Project Square Footage',    type: 'number',   hint: 'Estimated total area affected by the work', required: true },
+            { id: 'proj_cost',     label: 'Estimated Construction Cost ($)', type: 'number', hint: 'Used to calculate permit fees', required: true },
+            { id: 'proj_desc',     label: 'Project Description',       type: 'textarea', hint: 'Briefly describe what work will be done', required: true },
+          ]},
+          { id: 'contractor', title: 'Contractor Info', fields: [
+            { id: 'cont_name',     label: 'Licensed Contractor Name',  type: 'text',     hint: 'Required if hiring a contractor. Enter "Self" if owner-builder.', required: true },
+            { id: 'cont_license',  label: 'Contractor License Number', type: 'text',     hint: 'State license number. Not required for owner-builders.', required: false },
+            { id: 'cont_ins',      label: 'Insurance Certificate #',   type: 'text',     hint: 'General liability insurance certificate number', required: false },
+          ]},
+        ]
+      },
+      business: {
+        icon: '🏪',
+        label: 'Business License',
+        category: 'Licensing',
+        description: 'Required to legally operate any type of business within city limits.',
+        steps: [
+          { id: 'applicant', title: 'Applicant Info', fields: [
+            { id: 'app_name',      label: 'Applicant Full Name',       type: 'text',     hint: 'Owner or authorized representative', required: true },
+            { id: 'app_email',     label: 'Email Address',             type: 'email',    hint: 'License renewal notices sent here', required: true },
+            { id: 'app_phone',     label: 'Phone Number',              type: 'tel',      hint: 'Singapore number, e.g. +65 9123 4567', required: true },
+          ]},
+          { id: 'business', title: 'Business Details', fields: [
+            { id: 'biz_name',      label: 'Business Name (DBA)',       type: 'text',     hint: '"Doing Business As" — legal trade name', required: true },
+            { id: 'biz_type',      label: 'Business Entity Type',      type: 'select',   options: ['Sole Proprietorship', 'Partnership', 'LLC', 'Corporation (S-Corp)', 'Corporation (C-Corp)', 'Non-Profit'], required: true },
+            { id: 'biz_ein',       label: 'EIN / Tax ID Number',       type: 'text',     hint: 'Federal Employer Identification Number (or SSN for sole proprietors)', required: true },
+          ]},
+          { id: 'location', title: 'Business Location', fields: [
+            { id: 'biz_address',   label: 'Business Address',          type: 'text',     hint: 'Block/Building name and street (e.g. 10 Anson Road, #10-01, International Plaza)', required: true },
+            { id: 'biz_postal',   label: 'Postal Code',               type: 'text',     hint: '6-digit Singapore postal code', required: true },
+            { id: 'biz_home',      label: 'Home-Based Business?',      type: 'select',   options: ['No — commercial location', 'Yes — operating from home'], required: true },
+            { id: 'biz_employees', label: 'Number of Employees',       type: 'number',   hint: 'Including full-time, part-time, and contractors', required: true },
+          ]},
+          { id: 'activity', title: 'Business Activity', fields: [
+            { id: 'biz_naics',     label: 'Industry / Business Type',  type: 'select',   options: ['Retail', 'Food Service / Restaurant', 'Professional Services', 'Healthcare', 'Construction / Trades', 'Technology / Software', 'Education', 'Entertainment / Events', 'Transportation', 'Manufacturing', 'Other'], required: true },
+            { id: 'biz_desc',      label: 'Description of Services',   type: 'textarea', hint: 'Briefly describe what products or services you provide', required: true },
+          ]},
+        ]
+      },
+      event: {
+        icon: '🎉',
+        label: 'Special Event Permit',
+        category: 'Events',
+        description: 'Required for public gatherings, festivals, parades, and temporary events.',
+        steps: [
+          { id: 'organizer', title: 'Organizer Info', fields: [
+            { id: 'org_name',      label: 'Organizer / Organization Name', type: 'text',  required: true },
+            { id: 'org_email',     label: 'Email Address',              type: 'email',   required: true },
+            { id: 'org_phone',     label: 'Phone Number',               type: 'tel',     hint: 'Singapore number, e.g. +65 9123 4567', required: true },
+          ]},
+          { id: 'event_info', title: 'Event Details', fields: [
+            { id: 'evt_name',      label: 'Event Name',                 type: 'text',    hint: 'Official name of your event', required: true },
+            { id: 'evt_type',      label: 'Event Type',                 type: 'select',  options: ['Festival / Fair', 'Concert / Performance', 'Parade / March', 'Farmers Market', 'Outdoor Dining / Pop-Up', 'Charity / Fundraiser', 'Community Gathering', 'Other'], required: true },
+            { id: 'evt_expected',  label: 'Expected Attendance',        type: 'number',  hint: 'Estimated maximum number of attendees', required: true },
+          ]},
+          { id: 'venue', title: 'Venue & Timing', fields: [
+            { id: 'evt_location',  label: 'Event Location / Venue',     type: 'text',    hint: 'Venue name and address (e.g. Marina Bay Sands, 10 Bayfront Ave)', required: true },
+            { id: 'evt_postal',   label: 'Postal Code',               type: 'text',    hint: '6-digit Singapore postal code', required: true },
+            { id: 'evt_date',      label: 'Event Date',                 type: 'text',    hint: 'MM/DD/YYYY (or date range for multi-day events)', required: true },
+            { id: 'evt_hours',     label: 'Event Hours',                type: 'text',    hint: 'e.g. 10:00 AM – 8:00 PM', required: true },
+            { id: 'evt_setup',     label: 'Setup / Teardown Hours',     type: 'text',    hint: 'When will you set up before and clean up after?', required: false },
+          ]},
+          { id: 'logistics', title: 'Logistics & Safety', fields: [
+            { id: 'evt_alcohol',   label: 'Will Alcohol Be Served?',    type: 'select',  options: ['No', 'Yes — licensed vendor', 'Yes — self-serve'], required: true },
+            { id: 'evt_food',      label: 'Food Vendors Present?',      type: 'select',  options: ['No', 'Yes — pre-packaged only', 'Yes — food prepared on site'], required: true },
+            { id: 'evt_security',  label: 'Security / Safety Plan',     type: 'textarea', hint: 'Describe your crowd management, first aid, and emergency plans', required: true },
+          ]},
+        ]
+      }
+    };
+
+    // ============================================================
+    // STATE
+    // ============================================================
+    let state = {
+      activePermit: null,   // key into PERMIT_DATA
+      currentStep: 0,       // which form step we're on
+      formData: {},         // collected form values
+      phase: 'identify',    // 'identify' | 'form' | 'done'
+      chatStarted: false,
+    };
+
+    // ============================================================
+    // SIDEBAR — Render permit list
+    // ============================================================
+    function renderPermitList(filter = '') {
+      const container = document.getElementById('permit-list');
+      container.innerHTML = '';
+
+      // Group permits by category
+      const groups = {};
+      Object.entries(PERMIT_DATA).forEach(([key, p]) => {
+        if (filter && !p.label.toLowerCase().includes(filter.toLowerCase()) && !p.category.toLowerCase().includes(filter.toLowerCase())) return;
+        if (!groups[p.category]) groups[p.category] = [];
+        groups[p.category].push({ key, ...p });
+      });
+
+      Object.entries(groups).forEach(([cat, items]) => {
+        const catEl = document.createElement('div');
+        catEl.className = 'permit-category';
+        catEl.innerHTML = `<div class="permit-category-title">${cat}</div>`;
+        items.forEach(p => {
+          const item = document.createElement('div');
+          item.className = 'permit-item' + (state.activePermit === p.key ? ' selected' : '');
+          item.setAttribute('data-key', p.key);
+          item.innerHTML = `<div class="permit-item-icon">${p.icon}</div>${p.label}`;
+          item.onclick = () => startFlow(p.key);
+          catEl.appendChild(item);
+        });
+        container.appendChild(catEl);
+      });
+
+      if (Object.keys(groups).length === 0) {
+        container.innerHTML = `<div style="padding:16px;color:var(--grey-light);font-size:13px;text-align:center;">No permits found for "${filter}"</div>`;
+      }
+    }
+
+    function filterPermits(value) {
+      renderPermitList(value);
+    }
+
+    // ============================================================
+    // PROGRESS TRACKER
+    // ============================================================
+    function updateProgress() {
+      if (!state.activePermit) return;
+      const permit = PERMIT_DATA[state.activePermit];
+      const totalSteps = permit.steps.length;
+      const done = state.currentStep;
+      const pct = state.phase === 'done' ? 100 : Math.round((done / totalSteps) * 100);
+
+      document.getElementById('progress-section').style.display = 'block';
+      document.getElementById('progress-pct').textContent = pct + '%';
+      document.getElementById('progress-fill').style.width = pct + '%';
+
+      const stepsEl = document.getElementById('progress-steps');
+      stepsEl.innerHTML = permit.steps.map((s, i) => {
+        let dotClass = 'step-dot';
+        let icon = '';
+        if (i < done || state.phase === 'done') { dotClass += ' done'; icon = '✓'; }
+        else if (i === done) { dotClass += ' active'; }
+        return `<div class="progress-step"><div class="${dotClass}">${icon}</div>${s.title}</div>`;
+      }).join('');
+    }
+
+    // ============================================================
+    // CHAT — Rendering helpers
+    // ============================================================
+    function showChat() {
+      document.getElementById('welcome-screen').style.display = 'none';
+      document.getElementById('chat-feed').style.display = 'flex';
+      state.chatStarted = true;
+    }
+
+    function scrollToBottom() {
+      const feed = document.getElementById('chat-feed');
+      feed.scrollTop = feed.scrollHeight;
+    }
+
+    // Add a bot message (with optional quick reply chips and/or a card element)
+    function addBotMessage(text, { chips = [], card = null, clarifyTag = false } = {}) {
+      const inner = document.getElementById('chat-inner');
+
+      const msgEl = document.createElement('div');
+      msgEl.className = 'msg bot';
+
+      // Use data-msg attribute to avoid quote-escaping issues with apostrophes in chip labels
+      let chipHtml = chips.length
+        ? `<div class="quick-replies">${chips.map(c => `<button class="chip" data-msg="${c.replace(/"/g, '&quot;')}" onclick="sendMessage(this.dataset.msg)">${c}</button>`).join('')}</div>`
+        : '';
+
+      let cardHtml = card ? card : '';
+      let clarifyHtml = clarifyTag ? `<div class="clarify-tag">💡 Clarification</div>` : '';
+
+      msgEl.innerHTML = `
+        <div class="bot-avatar">🏛️</div>
+        <div class="msg-content">
+          <div class="msg-name">BizBot</div>
+          ${clarifyHtml}
+          <div class="bubble">${text}</div>
+          ${chipHtml}
+          ${cardHtml}
+        </div>
+      `;
+      inner.appendChild(msgEl);
+      scrollToBottom();
+      return msgEl;
+    }
+
+    // Add a user message
+    function addUserMessage(text) {
+      const inner = document.getElementById('chat-inner');
+      const msgEl = document.createElement('div');
+      msgEl.className = 'msg user';
+      msgEl.innerHTML = `<div class="msg-content"><div class="bubble">${escapeHtml(text)}</div></div>`;
+      inner.appendChild(msgEl);
+      scrollToBottom();
+    }
+
+    // Show typing indicator, return remove function
+    function showTyping() {
+      const inner = document.getElementById('chat-inner');
+      const el = document.createElement('div');
+      el.className = 'msg bot typing-indicator';
+      el.innerHTML = `<div class="bot-avatar">🏛️</div><div class="typing-dots"><span></span><span></span><span></span></div>`;
+      inner.appendChild(el);
+      scrollToBottom();
+      return () => el.remove();
+    }
+
+    // Simulate bot "thinking" then show a message
+    async function botReply(text, opts = {}, delay = 700) {
+      const remove = showTyping();
+      await wait(delay);
+      remove();
+      addBotMessage(text, opts);
+    }
+
+    function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // ============================================================
+    // FLOW — Identify which permit to apply for
+    // ============================================================
+    function startFlow(permitKey) {
+      // Close sidebar on mobile
+      document.getElementById('sidebar').classList.remove('open');
+      showChat();
+
+      state.activePermit = permitKey;
+      state.currentStep = 0;
+      state.formData = {};
+      state.phase = 'form';
+
+      // Highlight in sidebar
+      document.querySelectorAll('.permit-item').forEach(el => {
+        el.classList.toggle('selected', el.dataset.key === permitKey);
+      });
+      updateProgress();
+
+      const p = PERMIT_DATA[permitKey];
+
+      const intro = `
+        Great choice! You're applying for a <strong>${p.label}</strong>.<br/><br/>
+        ${p.description}<br/><br/>
+        I'll guide you through each section, one step at a time. You can ask me to clarify <em>any</em> field before answering — just click 💡 or type your question.
+      `;
+
+      addUserMessage(`I want to apply for a ${p.label}`);
+      const remove = showTyping();
+      setTimeout(() => {
+        remove();
+        addBotMessage(intro, { chips: ['Let\'s start!', 'What documents do I need?', 'How long does this take?'] });
+      }, 800);
+    }
+
+    // ============================================================
+    // FLOW — Present form step as a conversational card
+    // ============================================================
+    function presentStep(stepIndex) {
+      const permit = PERMIT_DATA[state.activePermit];
+      const step = permit.steps[stepIndex];
+      if (!step) { finishApplication(); return; }
+
+      const cardHtml = buildFormCard(step, stepIndex);
+      const total = permit.steps.length;
+
+      botReply(
+        `<strong>Step ${stepIndex + 1} of ${total} — ${step.title}</strong><br/>Please fill in the fields below. Not sure about something? Hit 💡 to ask!`,
+        { card: cardHtml }
+      );
+    }
+
+    // Build an inline form card HTML string
+    function buildFormCard(step, stepIndex) {
+      const fields = step.fields.map(f => {
+        let input;
+        if (f.type === 'select') {
+          input = `<select id="field_${f.id}" ${f.required ? 'required' : ''}>
+            <option value="">Select one…</option>
+            ${f.options.map(o => `<option value="${o}">${o}</option>`).join('')}
+          </select>`;
+        } else if (f.type === 'textarea') {
+          input = `<textarea id="field_${f.id}" placeholder="${f.hint || ''}" ${f.required ? 'required' : ''}></textarea>`;
+        } else {
+          input = `<input type="${f.type}" id="field_${f.id}" placeholder="${f.hint || ''}" ${f.required ? 'required' : ''} />`;
+        }
+        const hint = f.hint ? `<div class="form-hint">ℹ️ ${f.hint}</div>` : '';
+        return `
+          <div class="form-field">
+            <label for="field_${f.id}">${f.label}${f.required ? ' <span style="color:var(--teal)">*</span>' : ''}</label>
+            ${input}
+            ${hint}
+          </div>
+        `;
+      }).join('');
+
+      return `
+        <div class="form-card">
+          <div class="form-card-header">
+            <div class="form-card-icon">📝</div>
+            <div>
+              <div class="form-card-title">${step.title}</div>
+              <div class="form-card-subtitle">Fill in all required (*) fields</div>
+            </div>
+          </div>
+          <div class="form-field-group">${fields}</div>
+          <div class="form-actions">
+            <button class="btn-primary" onclick="submitStep(${stepIndex})">Continue →</button>
+            ${stepIndex > 0 ? `<button class="btn-secondary" onclick="goBack(${stepIndex})">← Back</button>` : ''}
+            <button class="btn-secondary" onclick="askClarifyStep(${stepIndex})">💡 Help</button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Collect and validate a step, then advance
+    function submitStep(stepIndex) {
+      const permit = PERMIT_DATA[state.activePermit];
+      const step = permit.steps[stepIndex];
+      const data = {};
+      let valid = true;
+
+      step.fields.forEach(f => {
+        const el = document.getElementById('field_' + f.id);
+        if (!el) return;
+        const val = el.value.trim();
+        if (f.required && !val) {
+          el.style.borderColor = '#e55';
+          valid = false;
+        } else {
+          el.style.borderColor = '';
+        }
+        data[f.id] = { label: f.label, value: val };
+      });
+
+      if (!valid) {
+        // Shake the button — brief visual feedback
+        const btn = document.querySelector('.form-card .btn-primary');
+        if (btn) { btn.style.transform = 'translateX(-4px)'; setTimeout(() => btn.style.transform = '', 200); }
+        addBotMessage('⚠️ Please fill in all required fields (marked with *) before continuing.');
+        scrollToBottom();
+        return;
+      }
+
+      // Save collected data
+      Object.assign(state.formData, data);
+      state.currentStep = stepIndex + 1;
+      updateProgress();
+
+      // Friendly acknowledgment
+      const acks = [
+        'Got it! Moving on to the next section.',
+        'Perfect, saved that info. One more step!',
+        'Looking good — let\'s keep going.',
+        'Done! Almost there.',
+      ];
+      const ack = acks[Math.min(stepIndex, acks.length - 1)];
+      addBotMessage(ack);
+
+      // Present next step after short pause
+      setTimeout(() => presentStep(state.currentStep), 800);
+    }
+
+    function goBack(stepIndex) {
+      state.currentStep = stepIndex - 1;
+      updateProgress();
+      presentStep(state.currentStep);
+    }
+
+    // ============================================================
+    // FLOW — Clarification questions about a form field
+    // ============================================================
+    function askClarifyStep(stepIndex) {
+      const permit = PERMIT_DATA[state.activePermit];
+      const step = permit.steps[stepIndex];
+      const fieldNames = step.fields.map(f => f.label);
+      const chips = fieldNames.map(l => `What is "${l}"?`);
+      chips.push('Why do you need this info?');
+      botReply(
+        `Sure! Which field can I explain for you in <strong>${step.title}</strong>?`,
+        { chips, clarifyTag: true },
+        400
+      );
+    }
+
+    // ============================================================
+    // FLOW — Finish application & show summary
+    // ============================================================
+    function finishApplication() {
+      state.phase = 'done';
+      updateProgress();
+
+      const permit = PERMIT_DATA[state.activePermit];
+
+      // Build summary rows
+      const rows = Object.entries(state.formData)
+        .filter(([_, v]) => v.value)
+        .map(([_, v]) => `<div class="summary-row"><span class="summary-key">${v.label}</span><span class="summary-val">${escapeHtml(v.value)}</span></div>`)
+        .join('');
+
+      const summaryCard = `
+        <div class="summary-card">
+          <div class="summary-title">${permit.icon} Your <span>${permit.label}</span> Summary</div>
+          ${rows}
+          <div class="form-actions" style="margin-top:18px;">
+            <button class="btn-primary" onclick="submitApplication()">🚀 Submit Application</button>
+            <button class="btn-secondary" onclick="downloadSummary()">⬇️ Download PDF</button>
+          </div>
+        </div>
+      `;
+
+      botReply(
+        `🎉 Excellent! You've completed all the required sections for your <strong>${permit.label}</strong>.<br/><br/>Here's a summary of your application. Please review it before submitting:`,
+        { card: summaryCard },
+        900
+      );
+    }
+
+    function submitApplication() {
+      botReply(
+        `✅ <strong>Application submitted successfully!</strong><br/><br/>
+        Your reference number is <strong>#${Math.floor(Math.random() * 900000) + 100000}</strong>. You'll receive a confirmation email within 24 hours. Typical processing time is <strong>5–10 business days</strong>.<br/><br/>
+        Is there anything else I can help you with?`,
+        { chips: ['Start a new application', 'Check application status', 'Contact the permit office'] },
+        1000
+      );
+    }
+
+    function downloadSummary() {
+      botReply(
+        `📄 In a live system, this would generate a PDF summary of your application for your records. For now, you can screenshot or print this page!`,
+        {},
+        400
+      );
+    }
+
+    // ============================================================
+    // FLOW — Natural language Q&A / clarifications
+    // ============================================================
+    const FAQ_RESPONSES = {
+      'what documents do i need': 'For most permits you\'ll need: a government-issued ID, property documents (for building permits), proof of insurance, and any relevant professional licenses. I\'ll remind you of specific documents at each step.',
+      'how long does this take': 'Processing times vary: Business Licenses typically take <strong>3–5 business days</strong>, Building Permits can take <strong>2–4 weeks</strong>, and Event Permits usually need <strong>30 days lead time</strong>.',
+      'how much does it cost': 'Fees depend on the permit type and project scope. Building permits are typically based on construction value (0.5–2%). Business licenses range from $50–$500/year. Event permits usually cost $100–$400.',
+      'what is parcel': 'A Parcel or APN (Assessor\'s Parcel Number) is a unique ID assigned to each piece of land for property tax purposes. You\'ll find it on your property tax bill or the county assessor\'s website.',
+      'what is ein': 'An EIN (Employer Identification Number) is a 9-digit federal tax ID for your business, similar to a Social Security Number for individuals. You can get one free at irs.gov in minutes.',
+      'what is dba': '"DBA" means "Doing Business As" — it\'s the trade name your business operates under, which may differ from the legal entity name.',
+      'what is zoning': 'Zoning classifications define how land can be used. Residential (R1) = single-family homes, Commercial (C1) = businesses, Industrial = factories/warehouses. Check your municipality\'s zoning map to find yours.',
+      'not sure': 'No worries! Let me ask a few quick questions to figure out the right permit for you. What are you planning to do? (e.g., build something, open a business, organize an event)',
+      'start a new application': 'Sure! What type of permit would you like to apply for?',
+    };
+
+    function handleFreeText(text) {
+      const lower = text.toLowerCase();
+
+      // Check FAQ matches
+      for (const [key, response] of Object.entries(FAQ_RESPONSES)) {
+        if (lower.includes(key.replace(/'/g, ''))) {
+          const infoCallout = `<div class="info-callout">${response}</div>`;
+          botReply('', { card: infoCallout, clarifyTag: false }, 600);
+          return;
+        }
+      }
+
+      // If in form phase, nudge back to form
+      if (state.phase === 'form' && state.activePermit) {
+        const permit = PERMIT_DATA[state.activePermit];
+        const step = permit.steps[state.currentStep];
+        const replies = [
+          `That's a great question! I'll note that for you. Now, let's continue with <strong>${step ? step.title : 'the next section'}</strong> — feel free to ask about any specific field.`,
+          `Good thinking. Once your application is submitted, you can follow up with the permits office directly. Ready to continue?`,
+          `Understood! In the meantime, let me know if any form field is confusing and I'll explain it.`,
+        ];
+        botReply(replies[Math.floor(Math.random() * replies.length)], { chips: ['Continue filling form', 'Explain a field', 'Start over'] }, 700);
+        return;
+      }
+
+      // Generic fallback
+      botReply(
+        `Thanks for asking! I can help you identify the right permit and fill out your application. Would you like to get started?`,
+        { chips: ['Building Permit', 'Business License', 'Event Permit', 'I\'m not sure'] },
+        700
+      );
+    }
+
+    // ============================================================
+    // INPUT HANDLERS
+    // ============================================================
+    function sendFromInput() {
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = '';
+      input.style.height = '';
+      sendMessage(text);
+    }
+
+    function sendMessage(text) {
+      if (!state.chatStarted) showChat();
+      addUserMessage(text);
+
+      const lower = text.toLowerCase();
+
+      // Route to permit start
+      if (lower.includes('building permit') || lower.includes('build')) { startFlow('building'); return; }
+      if (lower.includes('business license') || lower.includes('business')) { startFlow('business'); return; }
+      if (lower.includes('event permit') || lower.includes('event')) { startFlow('event'); return; }
+
+      // "Let's start!" chip — begin form for the already-selected permit
+      if (lower.includes('start') && (lower.includes('let') || lower.includes('start!'))) {
+        if (state.activePermit && state.phase === 'form') { presentStep(state.currentStep); return; }
+        botReply('Which permit would you like to apply for?',
+          { chips: ['Building Permit', 'Business License', 'Event Permit'] }, 400);
+        return;
+      }
+
+      if (lower.includes('continue filling') || lower.includes('continue')) {
+        if (state.activePermit && state.phase === 'form') { presentStep(state.currentStep); return; }
+      }
+
+      if (lower.includes('start over') || lower.includes('start a new')) {
+        state.activePermit = null; state.currentStep = 0; state.formData = {}; state.phase = 'identify';
+        botReply('Sure! What type of permit would you like to apply for?',
+          { chips: ['Building Permit', 'Business License', 'Event Permit'] }, 400);
+        return;
+      }
+
+      handleFreeText(text);
+    }
+
+    // 💡 Button — prompt for clarification context
+    function sendClarify() {
+      if (!state.chatStarted) showChat();
+      if (state.phase === 'form' && state.activePermit) {
+        askClarifyStep(state.currentStep);
+      } else {
+        botReply(
+          'I\'m happy to clarify anything! What would you like to know about the permit application process?',
+          { chips: ['What documents do I need?', 'How long does this take?', 'How much does it cost?', 'What is a zoning classification?'] },
+          400
+        );
+      }
+    }
+
+    function handleKey(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendFromInput();
+      }
+    }
+
+    // Auto-expand textarea
+    function autoGrow(el) {
+      el.style.height = 'auto';
+      el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+    }
+
+    // ============================================================
+    // VIEW SWITCHER (Chat vs Summary tab)
+    // ============================================================
+    function setView(view) {
+      document.querySelectorAll('.nav-btn').forEach((b, i) => {
+        b.classList.toggle('active', (view === 'chat' && i === 0) || (view === 'summary' && i === 1));
+      });
+
+      if (view === 'summary') {
+        if (Object.keys(state.formData).length === 0) {
+          botReply('You haven\'t started an application yet! Pick a permit type to get going.', {
+            chips: ['Building Permit', 'Business License', 'Event Permit']
+          }, 200);
+          if (!state.chatStarted) showChat();
+          return;
+        }
+        // Scroll to last summary card in chat
+        const feed = document.getElementById('chat-feed');
+        feed.scrollTop = feed.scrollHeight;
+      }
+    }
+
+    // ============================================================
+    // SIDEBAR MOBILE TOGGLE
+    // ============================================================
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+    }
+
+    // Close sidebar on outside click (mobile)
+    document.addEventListener('click', (e) => {
+      const sidebar = document.getElementById('sidebar');
+      const toggle = document.querySelector('.sidebar-toggle');
+      if (sidebar.classList.contains('open') && !sidebar.contains(e.target) && e.target !== toggle) {
+        sidebar.classList.remove('open');
+      }
+    });
+
+    // ============================================================
+    // INIT
+    // ============================================================
+    renderPermitList();
+
+  </script>
+</body>
+</html>
