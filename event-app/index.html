@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASEAN Summit 2027 — App Prototype</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="proto-layout">
+
+  <!-- ── Screen Navigator ──────────────────────────────────────── -->
+  <aside class="screen-nav">
+    <div class="screen-nav-header">
+      <div class="nav-logo">A</div>
+      <div>
+        <div class="nav-product-name">ASEAN Summit 2027</div>
+        <div class="nav-product-sub">Design Prototype · MVP v1</div>
+      </div>
+    </div>
+    <div class="nav-section-label">Authentication</div>
+    <div class="nav-item active" data-screen="login">1. Login</div>
+    <div class="nav-item" data-screen="mfa">2. MFA Verification</div>
+    <div class="nav-section-label">Core</div>
+    <div class="nav-item" data-screen="home">3. Home Dashboard</div>
+    <div class="nav-item" data-screen="agenda">4. Agenda</div>
+    <div class="nav-item" data-screen="programme">5. Full Programme</div>
+    <div class="nav-item" data-screen="session">6. Session Detail</div>
+    <div class="nav-section-label">Network &amp; Messaging</div>
+    <div class="nav-item" data-screen="network">7. Network Hub</div>
+    <div class="nav-item" data-screen="delegate">8. Delegate Profile</div>
+    <div class="nav-item" data-screen="messages">9. Messages List</div>
+    <div class="nav-item" data-screen="thread">10. Message Thread</div>
+    <div class="nav-section-label">Access &amp; Resources</div>
+    <div class="nav-item" data-screen="virtual">11. Virtual Events</div>
+    <div class="nav-item" data-screen="badge">12. Badge / QR</div>
+    <div class="nav-item" data-screen="docs">13. Documents</div>
+    <div class="nav-section-label">Account</div>
+    <div class="nav-item" data-screen="profile">14. Profile</div>
+    <div class="nav-item" data-screen="help">15. Help / Emergency</div>
+    <div class="nav-footer">
+      <div class="nav-footer-label">Zero Design System</div>
+      <div class="nav-footer-sub">gb-teal · Lexend · Mobile-first</div>
+    </div>
+  </aside>
+
+  <!-- ── Device Frame ───────────────────────────────────────────── -->
+  <div class="device-area">
+    <div class="device-chrome">
+      <div class="device-notch"></div>
+      <div class="device-screen" id="device-screen">
+
+        <!-- 1. LOGIN -->
+        <div class="screen active" id="s-login">
+          <div class="login-hero">
+            <div class="login-logo-mark">A</div>
+            <h1 class="login-title">ASEAN Summit 2027</h1>
+            <p class="login-sub">Secure access for delegates, officials, and authorised participants</p>
+          </div>
+          <div class="login-form">
+            <div class="form-field">
+              <label class="form-label">Language</label>
+              <select class="form-select">
+                <option>English</option><option>Bahasa Melayu</option>
+                <option>Thai</option><option>Vietnamese</option><option>Filipino</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label">Delegate ID</label>
+              <input class="form-input filled" type="text" value="SG-MIN-2027-001" placeholder="Enter your diplomatic ID" />
+            </div>
+            <div class="form-field">
+              <label class="form-label">Password</label>
+              <input class="form-input filled" type="password" value="••••••••" />
+            </div>
+            <div class="form-check-row">
+              <input type="checkbox" id="remember" checked style="accent-color:var(--brand-60)" />
+              <label for="remember">Remember this device</label>
+            </div>
+            <button class="btn-primary" style="width:100%" onclick="go('mfa')">Sign In</button>
+            <p style="text-align:center;margin-top:16px;font-size:12px;color:var(--gc-40)">
+              Need help? <span style="color:var(--brand-60);cursor:pointer">Contact support</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- 2. MFA -->
+        <div class="screen" id="s-mfa">
+          <div class="mfa-wrap">
+            <div class="mfa-icon">
+              <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+            </div>
+            <div class="mfa-title">Verify your identity</div>
+            <p class="mfa-sub">Enter the 6-digit code sent to your registered device ending in ••• 4821</p>
+            <div class="otp-row">
+              <div class="otp-box filled">3</div><div class="otp-box filled">7</div>
+              <div class="otp-box filled">4</div><div class="otp-box">_</div>
+              <div class="otp-box">_</div><div class="otp-box">_</div>
+            </div>
+            <button class="btn-primary" style="width:100%" onclick="go('home')">Verify</button>
+            <div class="mfa-links"><a>Resend code</a><a>Use another method</a></div>
+          </div>
+        </div>
+
+        <!-- 3. HOME DASHBOARD -->
+        <div class="screen" id="s-home">
+          <div class="status-bar"><span>9:41</span><span>Summit Day 2</span></div>
+          <div class="top-header">
+            <div>
+              <div class="top-header-title">ASEAN Summit 2027</div>
+              <div class="top-header-sub">Good morning, Dr. Chen</div>
+            </div>
+            <div class="top-header-icons">
+              <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+            </div>
+          </div>
+          <div class="screen-body">
+            <div class="alert-banner"><strong>Room change:</strong> Regional Security Dialogue now at Hall B</div>
+            <div class="section-label">Next Up</div>
+            <div class="card" style="border-left:3px solid var(--brand-60)">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                <div>
+                  <span class="tag tag-hybrid" style="margin-bottom:6px;display:inline-flex">Hybrid</span>
+                  <div class="card-title">ASEAN Digital Economy Integration</div>
+                  <div class="card-sub">09:00 – 10:15 · Orchid Ballroom 2</div>
+                </div>
+                <div style="font-size:20px;font-weight:700;color:var(--brand-60);flex-shrink:0;margin-left:8px">09:00</div>
+              </div>
+              <div class="btn-row">
+                <button class="btn-primary" onclick="go('badge')">Show QR</button>
+                <button class="btn-secondary" onclick="go('session')">View Details</button>
+              </div>
+            </div>
+            <div class="section-label">Today at a Glance</div>
+            <div class="card">
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <div style="display:flex;gap:10px;align-items:center"><div style="width:3px;height:32px;background:var(--brand-60);border-radius:2px;flex-shrink:0"></div><div><div style="font-size:12px;font-weight:600;color:var(--gc-80)">09:00 Digital Economy Integration</div><div style="font-size:10px;color:var(--gc-50)">Orchid Ballroom 2</div></div></div>
+                <div style="display:flex;gap:10px;align-items:center"><div style="width:3px;height:32px;background:var(--warn);border-radius:2px;flex-shrink:0"></div><div><div style="font-size:12px;font-weight:600;color:var(--gc-80)">11:30 Bilateral: SG–TH Infrastructure</div><div style="font-size:10px;color:var(--warn)">Time conflict detected</div></div></div>
+                <div style="display:flex;gap:10px;align-items:center"><div style="width:3px;height:32px;background:var(--gc-30);border-radius:2px;flex-shrink:0"></div><div><div style="font-size:12px;font-weight:600;color:var(--gc-80)">15:00 Regional Security Dialogue</div><div style="font-size:10px;color:var(--gc-50)">Hall B · Hybrid</div></div></div>
+              </div>
+            </div>
+            <div class="section-label">Quick Actions</div>
+            <div class="quick-actions">
+              <div class="qa-btn" onclick="go('badge')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Show my QR</span></div>
+              <div class="qa-btn" onclick="go('virtual')"><svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg><span>Join virtual session</span></div>
+              <div class="qa-btn" onclick="go('docs')"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Documents</span></div>
+              <div class="qa-btn" onclick="go('messages')"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Messages</span></div>
+            </div>
+            <div class="section-label">Suggested Connections</div>
+            <div class="card">
+              <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">
+                <div class="avatar">AR</div>
+                <div><div style="font-size:12px;font-weight:600;color:var(--gc-90)">Ahmad Rahman</div><div style="font-size:10px;color:var(--gc-50)">Deputy Minister, Malaysia</div></div>
+                <button class="btn-primary" style="padding:8px 12px;font-size:12px;margin-left:auto" onclick="go('delegate')">Connect</button>
+              </div>
+              <div style="display:flex;gap:10px;align-items:center">
+                <div class="avatar">PS</div>
+                <div><div style="font-size:12px;font-weight:600;color:var(--gc-90)">Priya Sharma</div><div style="font-size:10px;color:var(--gc-50)">Senior Advisor, India</div></div>
+                <button class="btn-primary" style="padding:8px 12px;font-size:12px;margin-left:auto" onclick="go('delegate')">Connect</button>
+              </div>
+            </div>
+            <div class="section-label">Recent Messages</div>
+            <div class="msg-row" onclick="go('thread')" style="border-radius:var(--radius-lg);border:1px solid var(--gc-20);margin:0 12px 14px">
+              <div class="avatar avatar-dark" style="width:32px;height:32px;font-size:10px">CG</div>
+              <div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--gc-90)">CLMV Group</div><div class="msg-preview">Prep call at 18:00 confirmed</div></div>
+              <div class="msg-time">11:42</div>
+            </div>
+          </div>
+          <nav class="bottom-tab">
+            <div class="tab-item active"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></div>
+            <div class="tab-item" onclick="go('agenda')"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span>Agenda</span></div>
+            <div class="tab-item" onclick="go('network')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Network</span></div>
+            <div class="tab-item" onclick="go('messages')"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Messages</span></div>
+            <div class="tab-item" onclick="go('profile')"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg><span>Profile</span></div>
+          </nav>
+        </div>
+
+        <!-- 4. AGENDA -->
+        <div class="screen" id="s-agenda">
+          <div class="top-header">
+            <div class="top-header-title">My Agenda</div>
+            <div class="top-header-icons"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+          </div>
+          <div class="page-tabs">
+            <div class="page-tab active">Today</div><div class="page-tab">Tomorrow</div>
+            <div class="page-tab">Full Programme</div><div class="page-tab">My Sessions</div>
+          </div>
+          <div class="search-bar">
+            <div class="search-input-wrap">
+              <svg class="search-input-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <input class="search-input" type="text" placeholder="Search sessions" />
+            </div>
+          </div>
+          <div class="filter-chips">
+            <div class="chip active">All Tracks</div><div class="chip">Digital</div>
+            <div class="chip">Security</div><div class="chip">Infrastructure</div><div class="chip">Virtual</div>
+          </div>
+          <div class="screen-body">
+            <div class="card" onclick="go('session')" style="cursor:pointer">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div style="font-size:11px;font-weight:600;color:var(--gc-50)">09:00 – 10:15</div><span class="tag tag-hybrid">Hybrid</span></div>
+              <div class="card-title">ASEAN Digital Economy Integration</div>
+              <div class="card-sub" style="margin-top:4px">Orchid Ballroom 2</div>
+              <span class="tag tag-available" style="margin-top:8px;display:inline-flex">Available</span>
+              <div class="btn-row">
+                <button class="btn-primary" onclick="go('session');event.stopPropagation()">View</button>
+                <button class="btn-secondary" onclick="event.stopPropagation()">Reminder</button>
+              </div>
+            </div>
+            <div class="card">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div style="font-size:11px;font-weight:600;color:var(--gc-50)">11:30 – 12:15</div><span class="tag tag-conflict">Conflict</span></div>
+              <div class="card-title">Bilateral: Singapore–Thailand Infrastructure</div>
+              <div class="card-sub" style="margin-top:4px">Jasmine Room 1</div>
+              <div class="info-banner">Time conflict with another session</div>
+              <div class="btn-row">
+                <button class="btn-primary" onclick="go('session')">View</button>
+                <button class="btn-secondary">Resolve Conflict</button>
+              </div>
+            </div>
+            <div class="card">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div style="font-size:11px;font-weight:600;color:var(--gc-50)">15:00 – 16:30</div><span class="tag tag-hybrid">Hybrid</span></div>
+              <div class="card-title">Regional Security Dialogue</div>
+              <div class="card-sub" style="margin-top:4px">Hall B (changed from Hall A)</div>
+              <div class="btn-row">
+                <button class="btn-primary" onclick="go('session')">View</button>
+                <button class="btn-secondary" onclick="go('virtual')">Join Virtually</button>
+              </div>
+            </div>
+            <div style="text-align:center;padding:14px">
+              <button class="btn-secondary" onclick="go('programme')">Browse all sessions</button>
+            </div>
+          </div>
+          <nav class="bottom-tab">
+            <div class="tab-item" onclick="go('home')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></div>
+            <div class="tab-item active"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span>Agenda</span></div>
+            <div class="tab-item" onclick="go('network')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span>Network</span></div>
+            <div class="tab-item" onclick="go('messages')"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Messages</span></div>
+            <div class="tab-item" onclick="go('profile')"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg><span>Profile</span></div>
+          </nav>
+        </div>
+
+        <!-- 5. FULL PROGRAMME -->
+        <div class="screen" id="s-programme">
+          <div class="back-header">
+            <div class="back-btn" onclick="go('agenda')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div>
+            <div class="back-header-title">Full Programme</div>
+          </div>
+          <div class="search-bar">
+            <div class="search-input-wrap">
+              <svg class="search-input-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <input class="search-input" type="text" placeholder="Search all sessions" />
+            </div>
+          </div>
+          <div class="filter-chips">
+            <div class="chip active">All</div><div class="chip">Day 1</div><div class="chip">Day 2</div>
+            <div class="chip">Day 3</div><div class="chip">In-person</div><div class="chip">Virtual</div>
+          </div>
+          <div class="screen-body">
+            <div class="section-label">Day 2 — 15 March 2027</div>
+            <div class="card" onclick="go('session')" style="cursor:pointer"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div style="font-size:11px;color:var(--gc-50);margin-bottom:4px">09:00 – 10:15</div><div class="card-title">ASEAN Digital Economy Integration</div><div class="card-sub">Orchid Ballroom 2</div></div><span class="tag tag-hybrid">Hybrid</span></div></div>
+            <div class="card" onclick="go('session')" style="cursor:pointer"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div style="font-size:11px;color:var(--gc-50);margin-bottom:4px">11:30 – 12:15</div><div class="card-title">Bilateral: SG–TH Infrastructure</div><div class="card-sub">Jasmine Room 1</div></div><span style="font-size:10px;color:var(--gc-40)">In-person</span></div></div>
+            <div class="card" onclick="go('session')" style="cursor:pointer"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div style="font-size:11px;color:var(--gc-50);margin-bottom:4px">14:00 – 15:00</div><div class="card-title">Climate Resilience Forum</div><div class="card-sub">Orchid Ballroom 1</div></div><span class="tag tag-hybrid">Hybrid</span></div></div>
+            <div class="card" onclick="go('session')" style="cursor:pointer"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div style="font-size:11px;color:var(--gc-50);margin-bottom:4px">15:00 – 16:30</div><div class="card-title">Regional Security Dialogue</div><div class="card-sub">Hall B</div></div><span class="tag tag-hybrid">Hybrid</span></div></div>
+            <div class="card" onclick="go('session')" style="cursor:pointer"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div style="font-size:11px;color:var(--gc-50);margin-bottom:4px">16:00 – 17:00</div><div class="card-title">ASEAN–China Strategic Partnership</div><div class="card-sub">Virtual Only</div></div><span class="tag tag-virtual">Virtual</span></div></div>
+            <div class="spacer-bottom"></div>
+          </div>
+          <nav class="bottom-tab">
+            <div class="tab-item" onclick="go('home')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></div>
+            <div class="tab-item active"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/></svg><span>Agenda</span></div>
+            <div class="tab-item" onclick="go('network')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span>Network</span></div>
+            <div class="tab-item" onclick="go('messages')"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Messages</span></div>
+            <div class="tab-item" onclick="go('profile')"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg><span>Profile</span></div>
+          </nav>
+        </div>
+
+        <!-- 6. SESSION DETAIL -->
+        <div class="screen" id="s-session">
+          <div class="back-header">
+            <div class="back-btn" onclick="go('agenda')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div>
+            <div class="back-header-title">Session Detail</div>
+            <div class="back-header-actions">
+              <svg viewBox="0 0 24 24"><path d="m19 21-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+              <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            </div>
+          </div>
+          <div class="session-hero">
+            <span class="tag tag-hybrid" style="margin-bottom:8px;display:inline-flex">Hybrid</span>
+            <div class="session-hero-title">ASEAN Digital Economy Integration</div>
+            <div class="session-hero-meta">09:00 – 10:15 · Orchid Ballroom 2<br>Available seats: 24</div>
+          </div>
+          <div class="session-actions">
+            <button class="btn-primary" style="flex:1" onclick="go('badge')">Check In</button>
+            <button class="btn-secondary" style="flex:1" onclick="go('virtual')">Join Virtually</button>
+          </div>
+          <div class="screen-body">
+            <div class="section-label">About this session</div>
+            <div class="card"><p style="font-size:12px;color:var(--gc-70);line-height:1.6">Regional approaches to digital trade frameworks, policy alignment across ASEAN member states, and cross-border innovation partnerships.</p></div>
+            <div class="section-label">Speakers</div>
+            <div class="card">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><div class="avatar">SC</div><div><div style="font-size:12px;font-weight:600;color:var(--gc-90)">Dr. Sarah Chen</div><div style="font-size:10px;color:var(--gc-50)">Trade Minister, Singapore</div></div></div>
+              <div class="divider"></div>
+              <div style="display:flex;align-items:center;gap:10px;margin-top:10px"><div class="avatar">NV</div><div><div style="font-size:12px;font-weight:600;color:var(--gc-90)">H.E. Nguyen Van Minh</div><div style="font-size:10px;color:var(--gc-50)">Ambassador, Vietnam</div></div></div>
+            </div>
+            <div class="section-label">Related Documents</div>
+            <div class="card" style="padding:0;overflow:hidden">
+              <div class="doc-row" onclick="go('docs')" style="border-bottom:1px solid var(--gc-10)">
+                <div class="doc-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+                <div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--gc-80)">Joint Statement on Digital Connectivity</div></div>
+                <span class="offline-badge">Offline</span>
+              </div>
+              <div class="doc-row" onclick="go('docs')">
+                <div class="doc-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+                <div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--gc-80)">Session Notes: Prior Working Draft</div></div>
+                <span class="secure-badge">Secure</span>
+              </div>
+            </div>
+            <div class="section-label">Discussion</div>
+            <div class="card" style="margin-bottom:14px"><button class="btn-secondary" style="width:100%">Open session thread</button></div>
+          </div>
+        </div>
+
+        <!-- 7. NETWORK HUB -->
+        <div class="screen" id="s-network">
+          <div class="top-header">
+            <div class="top-header-title">Network</div>
+            <div class="top-header-icons"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+          </div>
+          <div class="page-tabs">
+            <div class="page-tab active">Discover</div><div class="page-tab">My Connections</div>
+            <div class="page-tab">Business Cards</div><div class="page-tab">Groups</div>
+          </div>
+          <div class="search-bar">
+            <div class="search-input-wrap">
+              <svg class="search-input-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <input class="search-input" type="text" placeholder="Search delegates" />
+            </div>
+          </div>
+          <div class="filter-chips">
+            <div class="chip active">All</div><div class="chip">Country</div>
+            <div class="chip">Role</div><div class="chip">Organisation</div>
+          </div>
+          <div class="screen-body">
+            <div class="section-label">People You Should Meet</div>
+            <div class="suggest-card" onclick="go('delegate')">
+              <div style="display:flex;align-items:center;gap:10px"><div class="avatar">AR</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gc-90)">Ahmad Rahman</div><div style="font-size:11px;color:var(--gc-50)">Deputy Minister, Malaysia</div><span class="suggest-reason">Digital economy and trade alignment</span></div></div>
+              <div class="btn-row"><button class="btn-primary" onclick="event.stopPropagation()">Connect</button><button class="btn-secondary" onclick="go('delegate');event.stopPropagation()">View Profile</button></div>
+            </div>
+            <div class="suggest-card" onclick="go('delegate')">
+              <div style="display:flex;align-items:center;gap:10px"><div class="avatar">PS</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gc-90)">Priya Sharma</div><div style="font-size:11px;color:var(--gc-50)">Senior Advisor, India</div><span class="suggest-reason">Session overlap and policy interests</span></div></div>
+              <div class="btn-row"><button class="btn-primary" onclick="event.stopPropagation()">Connect</button><button class="btn-secondary" onclick="go('delegate');event.stopPropagation()">View Profile</button></div>
+            </div>
+            <div class="suggest-card">
+              <div style="display:flex;align-items:center;gap:10px"><div class="avatar">LT</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gc-90)">Dr. Le Thanh</div><div style="font-size:11px;color:var(--gc-50)">Director General, Vietnam</div><span class="suggest-reason">Regional security and logistics</span></div></div>
+              <div class="btn-row"><button class="btn-primary">Connect</button><button class="btn-secondary" onclick="go('delegate')">View Profile</button></div>
+            </div>
+            <button class="btn-full" onclick="go('badge')" style="margin-bottom:14px">Scan QR to Connect</button>
+          </div>
+          <nav class="bottom-tab">
+            <div class="tab-item" onclick="go('home')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></div>
+            <div class="tab-item" onclick="go('agenda')"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/></svg><span>Agenda</span></div>
+            <div class="tab-item active"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Network</span></div>
+            <div class="tab-item" onclick="go('messages')"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Messages</span></div>
+            <div class="tab-item" onclick="go('profile')"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg><span>Profile</span></div>
+          </nav>
+        </div>
+
+        <!-- 8. DELEGATE PROFILE -->
+        <div class="screen" id="s-delegate">
+          <div class="back-header"><div class="back-btn" onclick="go('network')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><div class="back-header-title">Ahmad Rahman</div></div>
+          <div class="screen-body">
+            <div style="background:#fff;padding:24px 16px;text-align:center;border-bottom:1px solid var(--gc-20)">
+              <div class="avatar" style="width:72px;height:72px;font-size:22px;margin:0 auto 12px">AR</div>
+              <div style="font-size:17px;font-weight:700;color:var(--gc-90)">Ahmad Rahman</div>
+              <div style="font-size:12px;color:var(--gc-50);margin-top:4px">Deputy Minister, Malaysia</div>
+              <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:10px">
+                <span class="tag tag-hybrid">Malaysia</span><span class="tag tag-hybrid">Infrastructure</span><span class="tag tag-hybrid">Trade</span>
+              </div>
+            </div>
+            <div class="section-label">About</div>
+            <div class="card"><p style="font-size:12px;color:var(--gc-70);line-height:1.6">Deputy Minister working on cross-border infrastructure development and regional economic cooperation across ASEAN member states.</p></div>
+            <div class="section-label">Mutual Interests</div>
+            <div class="card">
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <div style="display:flex;align-items:center;gap:8px"><div style="width:6px;height:6px;border-radius:50%;background:var(--brand-60);flex-shrink:0"></div><span style="font-size:12px;color:var(--gc-80)">Infrastructure financing</span></div>
+                <div style="display:flex;align-items:center;gap:8px"><div style="width:6px;height:6px;border-radius:50%;background:var(--brand-60);flex-shrink:0"></div><span style="font-size:12px;color:var(--gc-80)">Regional logistics</span></div>
+                <div style="display:flex;align-items:center;gap:8px"><div style="width:6px;height:6px;border-radius:50%;background:var(--brand-60);flex-shrink:0"></div><span style="font-size:12px;color:var(--gc-80)">Trade facilitation</span></div>
+              </div>
+            </div>
+            <button class="btn-full" onclick="go('thread')">Send Message</button>
+            <button class="btn-full-secondary">Exchange Business Card</button>
+            <button class="btn-full-secondary" style="margin-bottom:14px">Request Meeting</button>
+          </div>
+        </div>
+
+        <!-- 9. MESSAGES LIST -->
+        <div class="screen" id="s-messages">
+          <div class="top-header">
+            <div class="top-header-title">Messages</div>
+            <div class="top-header-icons"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+          </div>
+          <div class="page-tabs">
+            <div class="page-tab active">All Messages</div><div class="page-tab">Groups</div><div class="page-tab">Announcements</div>
+          </div>
+          <div class="search-bar">
+            <div class="search-input-wrap">
+              <svg class="search-input-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <input class="search-input" type="text" placeholder="Search conversations" />
+            </div>
+          </div>
+          <div class="screen-body">
+            <div style="background:#fff">
+              <div class="msg-row" onclick="go('thread')"><div class="avatar avatar-dark" style="width:42px;height:42px;font-size:12px">CG</div><div style="flex:1"><div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-size:13px;font-weight:600;color:var(--gc-90)">CLMV Economic Ministers</div><div class="msg-time">11:42</div></div><div class="msg-preview">Ahmad: Tomorrow's prep call confirmed at 18:00</div></div></div>
+              <div class="divider"></div>
+              <div class="msg-row" onclick="go('thread')"><div class="avatar" style="width:42px;height:42px;font-size:12px">PS</div><div style="flex:1"><div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-size:13px;font-weight:600;color:var(--gc-90)">Priya Sharma</div><div class="msg-time">10:15</div></div><div class="msg-preview">Draft MOU ready for your review</div></div></div>
+              <div class="divider"></div>
+              <div class="msg-row" onclick="go('thread')"><div class="avatar" style="width:42px;height:42px;font-size:12px">AR</div><div style="flex:1"><div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-size:13px;font-weight:600;color:var(--gc-90)">Ahmad Rahman</div><div class="msg-time">09:10</div></div><div class="msg-preview">Coffee meeting moved to MBS Lobby</div></div></div>
+              <div class="divider"></div>
+              <div class="msg-row" onclick="go('thread')"><div class="avatar avatar-green" style="width:42px;height:42px;font-size:12px">SA</div><div style="flex:1"><div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-size:13px;font-weight:600;color:var(--gc-90)">Summit Announcements</div><div class="msg-time">08:30</div></div><div class="msg-preview">Room change: Security Dialogue now Hall B</div></div></div>
+            </div>
+          </div>
+          <nav class="bottom-tab">
+            <div class="tab-item" onclick="go('home')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></div>
+            <div class="tab-item" onclick="go('agenda')"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/></svg><span>Agenda</span></div>
+            <div class="tab-item" onclick="go('network')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span>Network</span></div>
+            <div class="tab-item active"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Messages</span></div>
+            <div class="tab-item" onclick="go('profile')"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg><span>Profile</span></div>
+          </nav>
+        </div>
+
+        <!-- 10. MESSAGE THREAD — Fix 5: plain date text; Fix 6: white received bubbles -->
+        <div class="screen" id="s-thread">
+          <div class="back-header">
+            <div class="back-btn" onclick="go('messages')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div>
+            <div style="display:flex;align-items:center;gap:8px;flex:1">
+              <div class="avatar" style="width:30px;height:30px;font-size:10px">PS</div>
+              <div><div class="back-header-title" style="font-size:14px">Priya Sharma</div><div style="color:rgba(255,255,255,.65);font-size:10px">Senior Advisor, India</div></div>
+            </div>
+            <div class="back-header-actions"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></div>
+          </div>
+          <div class="chat-area">
+            <!-- Fix 5: no pill background, just plain text -->
+            <div class="chat-date-divider"><span>Today · 09:00</span></div>
+            <!-- Fix 6: white bg on received -->
+            <div class="chat-bubble-them">Draft MOU ready for your review — I've sent it to the shared folder.</div>
+            <div class="chat-timestamp left">10:15</div>
+            <div class="chat-bubble-me">Thanks Priya, I'll review before the 2 PM session.</div>
+            <div class="chat-timestamp right">10:22</div>
+            <div class="chat-bubble-them">I've also uploaded the revised summary with the new annexes included.</div>
+            <div class="chat-timestamp left">10:45</div>
+            <div class="chat-bubble-me">Perfect. See you at the session.</div>
+            <div class="chat-timestamp right">11:02</div>
+          </div>
+          <div style="padding:5px 14px;background:#fff;border-top:1px solid var(--gc-20)">
+            <span style="font-size:11px;color:var(--brand-60);cursor:pointer">Translate conversation</span>
+          </div>
+          <div class="chat-input-bar">
+            <input class="chat-input" placeholder="Type your message" />
+            <button class="btn-primary" style="padding:10px 16px">Send</button>
+          </div>
+        </div>
+
+        <!-- 11. VIRTUAL EVENTS -->
+        <div class="screen" id="s-virtual">
+          <div class="back-header"><div class="back-btn" onclick="go('home')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><div class="back-header-title">Virtual Events</div></div>
+          <div class="screen-body">
+            <div class="section-label">Live Now</div>
+            <div class="virtual-live-card">
+              <div class="virtual-live-top"><div class="live-dot"></div><span style="font-size:11px;font-weight:700;color:var(--neg)">LIVE</span><span style="font-size:11px;color:var(--gc-60)">340 watching</span></div>
+              <div style="padding:12px 14px">
+                <div style="font-size:13px;font-weight:600;color:var(--gc-90);margin-bottom:4px">Regional Security Dialogue</div>
+                <div style="font-size:11px;color:var(--gc-50);margin-bottom:10px">Hall B · Hybrid session · Started 15 min ago</div>
+                <button class="btn-primary" style="width:100%">Join Stream</button>
+              </div>
+            </div>
+            <div class="section-label">Upcoming Virtual</div>
+            <div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div style="font-size:13px;font-weight:600;color:var(--gc-90)">Climate Resilience Forum</div><div style="font-size:11px;color:var(--gc-50);margin-top:2px">Starts at 14:00</div></div><span style="font-size:10px;font-weight:600;color:var(--brand-60)">In 45 min</span></div></div>
+            <div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div style="font-size:13px;font-weight:600;color:var(--gc-90)">ASEAN–China Strategic Partnership</div><div style="font-size:11px;color:var(--gc-50);margin-top:2px">Starts at 16:00</div></div><span style="font-size:10px;font-weight:600;color:var(--gc-40)">In 2h 45m</span></div></div>
+            <div class="section-label">Recordings</div>
+            <div class="card">
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;align-items:center;gap:10px"><div style="width:36px;height:36px;border-radius:8px;background:var(--gc-10);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--brand-60)" stroke-width="1.5" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><div><div style="font-size:12px;font-weight:600;color:var(--gc-80)">Maritime Security Cooperation</div><div style="font-size:10px;color:var(--gc-40)">Day 1 · 1h 12m</div></div></div>
+                <div class="divider"></div>
+                <div style="display:flex;align-items:center;gap:10px"><div style="width:36px;height:36px;border-radius:8px;background:var(--gc-10);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--brand-60)" stroke-width="1.5" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><div><div style="font-size:12px;font-weight:600;color:var(--gc-80)">Joint Press Briefing</div><div style="font-size:10px;color:var(--gc-40)">Day 1 · 38m</div></div></div>
+              </div>
+            </div>
+            <div style="margin:10px 12px 14px;padding:12px 14px;background:#fff;border-radius:10px;border:1px solid var(--gc-20);display:flex;align-items:center;justify-content:space-between">
+              <div><div style="font-size:12px;font-weight:600;color:var(--gc-80)">Having technical issues?</div><div style="font-size:10px;color:var(--gc-50);margin-top:2px">We're here to help</div></div>
+              <button class="btn-secondary" style="font-size:12px;padding:8px 14px">Get Support</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 12. BADGE / QR -->
+        <div class="screen" id="s-badge">
+          <div class="back-header"><div class="back-btn" onclick="go('home')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><div class="back-header-title">My Badge</div></div>
+          <div class="screen-body">
+            <div style="background:#fff;border-radius:var(--radius-lg);border:1px solid var(--gc-20);padding:16px;margin:10px 12px 0;text-align:center">
+              <div class="avatar" style="width:64px;height:64px;font-size:20px;margin:0 auto 10px">SC</div>
+              <div style="font-size:16px;font-weight:700;color:var(--gc-90)">Dr. Sarah Chen</div>
+              <div style="font-size:12px;color:var(--gc-50);margin-top:4px">Trade Minister, Singapore</div>
+              <div style="margin-top:6px"><span class="tag tag-hybrid">Delegate Access</span></div>
+            </div>
+            <div style="background:#fff;border-radius:var(--radius-lg);border:1px solid var(--gc-20);margin:10px 12px 0;padding:20px 14px;text-align:center">
+              <div class="qr-box" style="margin-bottom:12px"><div class="qr-inner"></div></div>
+              <div style="font-size:11px;color:var(--gc-50);line-height:1.5">Use this code for session check-in<br>and authorised venue access</div>
+              <div style="font-size:10px;font-weight:600;color:var(--brand-60);margin-top:8px;font-family:monospace;letter-spacing:.05em">SG-MIN-2027-001</div>
+            </div>
+            <button class="btn-full">Add to Wallet</button>
+            <button class="btn-full-secondary" style="margin-bottom:14px">Share Business Card</button>
+          </div>
+        </div>
+
+        <!-- 13. DOCUMENTS -->
+        <div class="screen" id="s-docs">
+          <div class="back-header"><div class="back-btn" onclick="go('home')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><div class="back-header-title">Documents &amp; Resources</div></div>
+          <div class="search-bar">
+            <div class="search-input-wrap">
+              <svg class="search-input-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <input class="search-input" type="text" placeholder="Search by title, topic, or session" />
+            </div>
+          </div>
+          <div class="filter-chips">
+            <div class="chip active">All</div><div class="chip">Session</div><div class="chip">My Access</div><div class="chip">Downloaded</div>
+          </div>
+          <div class="screen-body">
+            <div class="section-label">Featured</div>
+            <div style="background:#fff;margin:0 12px;border-radius:var(--radius-lg);border:1px solid var(--gc-20);overflow:hidden">
+              <div class="doc-row" style="border-bottom:1px solid var(--gc-10)"><div class="doc-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--gc-80)">ASEAN Economic Community Blueprint 2025–2030</div><div style="font-size:10px;color:var(--gc-40);margin-top:2px">PDF · 4.2MB</div></div><span class="offline-badge">Offline</span></div>
+              <div class="doc-row"><div class="doc-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--gc-80)">Joint Statement on Digital Connectivity</div><div style="font-size:10px;color:var(--gc-40);margin-top:2px">PDF · 1.8MB</div></div></div>
+            </div>
+            <div class="section-label">Session Documents</div>
+            <div class="card" style="padding:0;overflow:hidden">
+              <div style="padding:10px 14px;background:var(--brand-10);border-bottom:1px solid var(--brand-20)"><div style="font-size:11px;font-weight:600;color:var(--brand-70)">Digital Economy Integration</div></div>
+              <div class="doc-row" style="border-bottom:1px solid var(--gc-10)"><div class="doc-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--gc-80)">Briefing paper</div></div><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--brand-50)" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+              <div class="doc-row"><div class="doc-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--gc-80)">Speaker notes</div></div><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--brand-50)" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+            </div>
+            <div class="section-label">Downloaded</div>
+            <div style="background:#fff;margin:0 12px;border-radius:var(--radius-lg);border:1px solid var(--gc-20);overflow:hidden;margin-bottom:14px">
+              <div class="doc-row" style="border-bottom:1px solid var(--gc-10)"><div class="doc-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--gc-80)">Regional Security Dialogue Notes</div></div><span class="offline-badge">Offline</span></div>
+              <div class="doc-row"><div class="doc-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--gc-80)">Draft MOU v2</div></div><span class="offline-badge">Offline</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 14. PROFILE -->
+        <div class="screen" id="s-profile">
+          <div class="status-bar"><span>9:41</span><span>Summit Day 2</span></div>
+          <div class="profile-hero">
+            <div class="profile-avatar">SC</div>
+            <div class="profile-name">Dr. Sarah Chen</div>
+            <div class="profile-role">Trade Minister, Singapore</div>
+          </div>
+          <div class="screen-body">
+            <div class="stats-row">
+              <div class="stat-card"><div class="stat-num">12</div><div class="stat-lbl">Sessions attended</div></div>
+              <div class="stat-card"><div class="stat-num">8</div><div class="stat-lbl">Connections made</div></div>
+              <div class="stat-card"><div class="stat-num">24</div><div class="stat-lbl">Messages sent</div></div>
+            </div>
+            <div class="section-label">My Account</div>
+            <div class="menu-group">
+              <div class="menu-item" onclick="go('badge')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>My Digital Business Card</span><svg class="chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+              <div class="menu-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span>Language Settings</span><svg class="chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+              <div class="menu-item"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span>Notification Preferences</span><svg class="chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+              <div class="menu-item" onclick="go('docs')"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span>Downloaded Documents</span><svg class="chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </div>
+            <div class="section-label">Support</div>
+            <div class="menu-group">
+              <div class="menu-item" onclick="go('help')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span>Help &amp; Support</span><svg class="chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+              <div class="menu-item"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07"/></svg><span>Emergency Contacts</span><svg class="chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+              <div class="menu-item"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span style="color:var(--neg)">Sign Out</span></div>
+            </div>
+            <div class="spacer-bottom"></div>
+          </div>
+          <nav class="bottom-tab">
+            <div class="tab-item" onclick="go('home')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></div>
+            <div class="tab-item" onclick="go('agenda')"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/></svg><span>Agenda</span></div>
+            <div class="tab-item" onclick="go('network')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span>Network</span></div>
+            <div class="tab-item" onclick="go('messages')"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Messages</span></div>
+            <div class="tab-item active"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg><span>Profile</span></div>
+          </nav>
+        </div>
+
+        <!-- 15. HELP / EMERGENCY — Fix 3: colon separator in emergency contacts -->
+        <div class="screen" id="s-help">
+          <div class="back-header" style="background:var(--neg)">
+            <div class="back-btn" onclick="go('home')" style="background:rgba(255,255,255,.2)"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div>
+            <div class="back-header-title">Help &amp; Support</div>
+          </div>
+          <div class="emergency-banner">
+            <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <span>Security advisory in effect — follow marshal instructions</span>
+          </div>
+          <div class="screen-body">
+            <div style="margin:10px 12px 0;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <button class="btn-primary" style="background:var(--neg);border-color:var(--neg);width:100%">Emergency Info</button>
+              <button class="btn-secondary" style="border-color:var(--gc-30);color:var(--gc-70);width:100%">Technical Support</button>
+            </div>
+            <div class="section-label">Emergency Contacts</div>
+            <div class="help-section">
+              <div class="help-row">
+                <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07"/><path d="M1.42 9.13A19.79 19.79 0 0 1 4.49 4.5"/></svg>
+                <span style="font-weight:600;color:var(--neg)">Security Desk: +65 6000 1234</span>
+              </div>
+              <div class="help-row">
+                <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                <span>Medical Support: Level B2, Red Cross Station</span>
+              </div>
+              <div class="help-row">
+                <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 15a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 4.11h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 11a16 16 0 0 0 6 6"/></svg>
+                <span>Event Hotline: +65 6000 2027</span>
+              </div>
+            </div>
+            <div class="section-label">Venue Information</div>
+            <div class="help-section">
+              <div class="help-row"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>Summit venue map</span></div>
+              <div class="help-row"><svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg><span>Shuttle timings and stops</span></div>
+              <div class="help-row"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Registration counters — Level 1 Lobby</span></div>
+            </div>
+            <div class="section-label">FAQ</div>
+            <div class="help-section" style="margin-bottom:14px">
+              <div class="help-row"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span>How do I check into a session?</span></div>
+              <div class="help-row"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span>How do I join a virtual session?</span></div>
+              <div class="help-row"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span>How do I change my language?</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /device-screen -->
+    </div><!-- /device-chrome -->
+  </div><!-- /device-area -->
+
+</div><!-- /proto-layout -->
+
+<script>
+  const SCREENS = {
+    login:'s-login', mfa:'s-mfa', home:'s-home', agenda:'s-agenda',
+    programme:'s-programme', session:'s-session', network:'s-network',
+    delegate:'s-delegate', messages:'s-messages', thread:'s-thread',
+    virtual:'s-virtual', badge:'s-badge', docs:'s-docs',
+    profile:'s-profile', help:'s-help'
+  };
+  const NAV_ORDER = [
+    'login','mfa','home','agenda','programme','session',
+    'network','delegate','messages','thread',
+    'virtual','badge','docs','profile','help'
+  ];
+  function go(screen) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const target = document.getElementById(SCREENS[screen]);
+    if (target) {
+      target.classList.add('active');
+      const body = target.querySelector('.screen-body');
+      if (body) body.scrollTop = 0;
+    }
+    document.querySelectorAll('.nav-item').forEach((el, i) => {
+      el.classList.toggle('active', i === NAV_ORDER.indexOf(screen));
+    });
+  }
+  document.querySelectorAll('.nav-item[data-screen]').forEach(el => {
+    el.addEventListener('click', () => go(el.dataset.screen));
+  });
+</script>
+</body>
+</html>
