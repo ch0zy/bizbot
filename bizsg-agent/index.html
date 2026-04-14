@@ -8,7 +8,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       min-height: 100dvh;
-      background: #f0f2f5;
+      background: #f9f9f9;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -95,10 +95,10 @@
 
     .msgs-outer {
       flex: 1; min-height: 0; overflow-y: auto;
-      display: flex; flex-direction: column-reverse;
       padding: 10px 10px 6px;
+      display: flex; flex-direction: column;
     }
-    .msgs-inner { display: flex; flex-direction: column; gap: 2px; }
+    .msgs-inner { display: flex; flex-direction: column; gap: 2px; flex: 1; justify-content: flex-end; }
 
     .row { display: flex; margin: 1px 0; }
     .row.user { justify-content: flex-end; }
@@ -176,7 +176,7 @@
     .outline-btn-red { background: none; border: 1px solid #FFCDD2; border-radius: 6px; padding: 4px 12px; font-size: 11px; cursor: pointer; color: #C62828; margin-top: 8px; }
     .invite-link { font-size: 11px; color: var(--bsg-blue); word-break: break-all; margin-top: 4px; font-family: monospace; }
     .warn-note   { font-size: 11px; color: #E65100; background: #FFF8E1; border-left: 3px solid #FFB74D; padding: 5px 8px; border-radius: 0 4px 4px 0; margin-top: 6px; }
-    .sentinel { height: 1px; }
+
 
     /* Flow guide */
     .flow-guide {
@@ -210,7 +210,7 @@
       <div class="msgs-inner" id="msgsInner">
         <div class="day"><span class="day-label">Today</span></div>
       </div>
-      <div class="sentinel" id="sentinel"></div>
+
     </div>
     <div class="qrs" id="qrs" style="display:none"></div>
     <div class="input-area">
@@ -231,8 +231,8 @@
   </div>
 
   <script>
+    const msgsOuter = document.querySelector('.msgs-outer');
     const msgsInner = document.getElementById('msgsInner');
-    const sentinel  = document.getElementById('sentinel');
     const qrsEl     = document.getElementById('qrs');
     const inp       = document.getElementById('inp');
     const sendBtn   = document.getElementById('sendBtn');
@@ -245,7 +245,7 @@
       const d = new Date();
       return d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
     }
-    function scrollBot() { setTimeout(() => sentinel.scrollIntoView({ behavior:'smooth', block:'end' }), 60); }
+    function scrollBot() { setTimeout(() => { msgsOuter.scrollTop = msgsOuter.scrollHeight; }, 50); }
 
     function addMsg(role, content) {
       const row = document.createElement('div'); row.className = 'row ' + role;
